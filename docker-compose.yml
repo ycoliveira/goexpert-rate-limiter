@@ -7,6 +7,8 @@ services:
       - "8080:8080"
     volumes:
       - ./.env:/.env
+    depends_on:
+      - redis
     networks:
       - rate-limiter-network
 

@@ -5,6 +5,7 @@ import "github.com/spf13/viper"
 type conf struct {
 	WebServerPort          string `mapstructure:"WEB_SERVER_PORT"`
 	RateLimiterMaxRequests string `mapstructure:"RATE_LIMITER_MAX_REQUESTS"`
+	BlockTimeSeconds       int    `mapstructure:"BLOCK_TIME_SECONDS"`
 }
 
 func LoadConfig(path string) (*conf, error) {
@@ -16,11 +17,11 @@ func LoadConfig(path string) (*conf, error) {
 	viper.AutomaticEnv()
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	err = viper.Unmarshal(&cfg)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return cfg, err
+	return cfg, nil
 }
