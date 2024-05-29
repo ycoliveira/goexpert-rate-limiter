@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -22,14 +21,10 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	maxRequests, err := strconv.Atoi(config.RateLimiterMaxRequests)
-	if err != nil {
-		panic(err)
-	}
 	blockDur := time.Duration(config.BlockTimeSeconds) * time.Second
 
 	storage := middlewareRateLimiter.NewRedisStorage()
-	rateLimiter := middlewareRateLimiter.NewRateLimiter(maxRequests, blockDur, storage)
+	rateLimiter := middlewareRateLimiter.NewRateLimiter(config.RateLimiterMaxRequests, blockDur, storage, config.TokenLimits)
 	r.Use(rateLimiter.RateLimit)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {

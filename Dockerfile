@@ -10,4 +10,5 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 # Run stage
 FROM scratch
 COPY --from=build /app/goapp .
+COPY ./.env ./.env
 CMD ["./goapp"]
